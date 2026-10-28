@@ -25,7 +25,7 @@ Versions matter. The included patcher supports **only the exact MonoMod.Core fil
 - A jailbroken PS5 with working [Playden](https://github.com/leolobato/playden-ps5), configured according to its own documentation.
 - Legitimate Windows Terraria and tModLoader installations. No game binaries are distributed here.
 - A PS5 file manager or FTP access.
-- The exact Windows x64 runtime archive used for this setup: **`dotnet-runtime-8.0.0-win-x64.zip`**, from [Microsoft .NET 8 downloads](https://dotnet.microsoft.com/en-us/download/dotnet/8.0). Extract it to obtain `dotnet.exe` (Step 2).
+- The **`dotnet-runtime-8.0.0-win-x64.zip` archive already included in `LaunchUtils/`** in the tested setup. Extract it **in that folder** to obtain `dotnet.exe` (Step 2); download from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) only if it is missing.
 - Python 3 on a PC or Mac to generate the patched MonoMod DLL.
 
 ## Step 1 — Copy your tModLoader files
@@ -52,23 +52,32 @@ That **inner copy came from an original Terraria installation downloaded through
 /data/playden-games/1281930/Libraries/ReLogic/1.0.0/ReLogic.dll
 ~~~
 
-## Step 2 — Extract `dotnet-runtime-8.0.0-win-x64.zip` (required to launch)
+## Step 2 — Extract the .NET 8 ZIP already in `LaunchUtils`
 
-**This exact ZIP is what the tested setup used to obtain `dotnet.exe`, the executable Playden starts to run tModLoader.** Download `dotnet-runtime-8.0.0-win-x64.zip` (the **Windows x64 .NET Runtime 8.0.0 ZIP**, not a source-code ZIP) from Microsoft's official [.NET 8 downloads](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+**In the original working Playden/tModLoader setup, `dotnet-runtime-8.0.0-win-x64.zip` was already inside the `LaunchUtils` folder.** There was **no need to download that ZIP separately**. It just needed to be **extracted in place** to provide the `dotnet.exe` file Playden uses to launch tModLoader.
 
-1. On your computer, **extract/unzip** `dotnet-runtime-8.0.0-win-x64.zip`. Do not copy the ZIP itself to the game folder.
-2. In the extracted files, locate `dotnet.exe` along with the `host/` and `shared/` folders.
-3. On the PS5, open tModLoader's game directory: `/data/playden-games/1281930/`.
-4. Open/create a folder called `LaunchUtils`. **Copy the extracted runtime's contents** into `LaunchUtils`, including `dotnet.exe`, `host/`, and `shared/`.
-5. Verify the file is exactly here:
+1. Open your tModLoader folder on the PS5:
+
+   ~~~text
+   /data/playden-games/1281930/LaunchUtils/
+   ~~~
+
+2. Find the existing archive:
+
+   ~~~text
+   dotnet-runtime-8.0.0-win-x64.zip
+   ~~~
+
+3. **Extract its contents directly into that same `LaunchUtils` folder.** Use your file manager's **Extract here** option (or extract elsewhere and copy the *contents* back into `LaunchUtils`). Do not put everything into a new nested folder.
+4. Verify that `dotnet.exe` is now at:
 
    ~~~text
    /data/playden-games/1281930/LaunchUtils/dotnet.exe
    ~~~
 
-**Don't add an extra nested folder** like `LaunchUtils/dotnet-runtime-8.0.0-win-x64/dotnet.exe`. Playden needs `LaunchUtils/dotnet.exe` directly. In **Step 5**, choose that file as the **Program** and keep **Program folder** set to `.`.
+5. In **Step 5**, set Playden's **Program** to `LaunchUtils/dotnet.exe` and **Program folder** to `.`.
 
-Expected structure:
+Expected structure **after extraction**:
 
 ~~~text
 /data/playden-games/1281930/
@@ -77,14 +86,17 @@ Expected structure:
 │   ├── ReLogic/1.0.0/ReLogic.dll
 │   └── monomod.core/1.3.2/lib/net8.0/MonoMod.Core.dll
 └── LaunchUtils/
-    ├── dotnet.exe
+    ├── dotnet-runtime-8.0.0-win-x64.zip   # original archive may stay here
+    ├── dotnet.exe                          # extracted; Playden launches this
     ├── host/fxr/8.0.0/hostfxr.dll
     └── shared/Microsoft.NETCore.App/8.0.0/
         ├── coreclr.dll
         └── clrjit.dll
 ~~~
 
-**Important:** The MonoMod patch hard-codes the above `clrjit.dll` path. If you use another runtime directory or move the game, the patch is not suitable without modification.
+**If your installation doesn't include the ZIP**, you can obtain the legitimate Windows x64 .NET Runtime 8.0.0 archive from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) and extract the contents into `LaunchUtils`. But **the tested setup already had this ZIP in place**.
+
+**Important:** The MonoMod patch hard-codes the above `clrjit.dll` path. A different runtime version, folder name or game location requires reviewing the patch before use.
 
 ## Step 3 — Fix MonoMod.Core (Access denied)
 

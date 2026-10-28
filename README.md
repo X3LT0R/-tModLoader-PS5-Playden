@@ -25,7 +25,7 @@ Versions matter. The included patcher supports **only the exact MonoMod.Core fil
 - A jailbroken PS5 with working [Playden](https://github.com/leolobato/playden-ps5), configured according to its own documentation.
 - Legitimate Windows Terraria and tModLoader installations. No game binaries are distributed here.
 - A PS5 file manager or FTP access.
-- [Windows x64 .NET 8 runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+- The exact Windows x64 runtime archive used for this setup: **`dotnet-runtime-8.0.0-win-x64.zip`**, from [Microsoft .NET 8 downloads](https://dotnet.microsoft.com/en-us/download/dotnet/8.0). Extract it to obtain `dotnet.exe` (Step 2).
 - Python 3 on a PC or Mac to generate the patched MonoMod DLL.
 
 ## Step 1 — Copy your tModLoader files
@@ -52,9 +52,21 @@ That **inner copy came from an original Terraria installation downloaded through
 /data/playden-games/1281930/Libraries/ReLogic/1.0.0/ReLogic.dll
 ~~~
 
-## Step 2 — Install portable .NET 8
+## Step 2 — Extract `dotnet-runtime-8.0.0-win-x64.zip` (required to launch)
 
-Extract the Windows **x64** runtime into `LaunchUtils/`, so `dotnet.exe` and the `host/` and `shared/` folders live directly inside it.
+**This exact ZIP is what the tested setup used to obtain `dotnet.exe`, the executable Playden starts to run tModLoader.** Download `dotnet-runtime-8.0.0-win-x64.zip` (the **Windows x64 .NET Runtime 8.0.0 ZIP**, not a source-code ZIP) from Microsoft's official [.NET 8 downloads](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+
+1. On your computer, **extract/unzip** `dotnet-runtime-8.0.0-win-x64.zip`. Do not copy the ZIP itself to the game folder.
+2. In the extracted files, locate `dotnet.exe` along with the `host/` and `shared/` folders.
+3. On the PS5, open tModLoader's game directory: `/data/playden-games/1281930/`.
+4. Open/create a folder called `LaunchUtils`. **Copy the extracted runtime's contents** into `LaunchUtils`, including `dotnet.exe`, `host/`, and `shared/`.
+5. Verify the file is exactly here:
+
+   ~~~text
+   /data/playden-games/1281930/LaunchUtils/dotnet.exe
+   ~~~
+
+**Don't add an extra nested folder** like `LaunchUtils/dotnet-runtime-8.0.0-win-x64/dotnet.exe`. Playden needs `LaunchUtils/dotnet.exe` directly. In **Step 5**, choose that file as the **Program** and keep **Program folder** set to `.`.
 
 Expected structure:
 

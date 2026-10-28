@@ -25,7 +25,7 @@ Versions matter. The included patcher supports **only the exact MonoMod.Core fil
 - A jailbroken PS5 with working [Playden](https://github.com/leolobato/playden-ps5), configured according to its own documentation.
 - Legitimate Windows Terraria and tModLoader installations. No game binaries are distributed here.
 - A PS5 file manager or FTP access.
-- The **`dotnet-runtime-8.0.0-win-x64.zip` archive already included in `LaunchUtils/`** in the tested setup. Extract it **in that folder** to obtain `dotnet.exe` (Step 2); download from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) only if it is missing.
+- The `dotnet-runtime-8.0.0-win-x64.zip` archive in tModLoader's `LaunchUtils/` directory (see Step 2).
 - Python 3 on a PC or Mac to generate the patched MonoMod DLL.
 
 ## Step 1 — Copy your tModLoader files
@@ -52,32 +52,22 @@ That **inner copy came from an original Terraria installation downloaded through
 /data/playden-games/1281930/Libraries/ReLogic/1.0.0/ReLogic.dll
 ~~~
 
-## Step 2 — Extract the .NET 8 ZIP already in `LaunchUtils`
+## Step 2 — Extract the .NET 8 runtime
 
-**In the original working Playden/tModLoader setup, `dotnet-runtime-8.0.0-win-x64.zip` was already inside the `LaunchUtils` folder.** There was **no need to download that ZIP separately**. It just needed to be **extracted in place** to provide the `dotnet.exe` file Playden uses to launch tModLoader.
+tModLoader needs the Windows .NET 8 runtime to start. Playden provides the required archive, `dotnet-runtime-8.0.0-win-x64.zip`, inside the game's `LaunchUtils` folder. Extract it to set up `dotnet.exe`.
 
-1. Open your tModLoader folder on the PS5:
+1. Open the **tModLoader** folder on your PS5:
 
    ~~~text
    /data/playden-games/1281930/LaunchUtils/
    ~~~
 
-2. Find the existing archive:
-
-   ~~~text
-   dotnet-runtime-8.0.0-win-x64.zip
-   ~~~
-
-3. **Extract its contents directly into that same `LaunchUtils` folder.** Use your file manager's **Extract here** option (or extract elsewhere and copy the *contents* back into `LaunchUtils`). Do not put everything into a new nested folder.
-4. Verify that `dotnet.exe` is now at:
-
-   ~~~text
-   /data/playden-games/1281930/LaunchUtils/dotnet.exe
-   ~~~
-
+2. Locate the file `dotnet-runtime-8.0.0-win-x64.zip`.
+3. Select the ZIP and choose **Extract here**. Keep the extracted files directly inside `LaunchUtils`, rather than in an additional subfolder.
+4. Check that `dotnet.exe`, `host/`, and `shared/` are all in the `LaunchUtils` directory.
 5. In **Step 5**, set Playden's **Program** to `LaunchUtils/dotnet.exe` and **Program folder** to `.`.
 
-Expected structure **after extraction**:
+Your folder should look like this:
 
 ~~~text
 /data/playden-games/1281930/
@@ -86,17 +76,17 @@ Expected structure **after extraction**:
 │   ├── ReLogic/1.0.0/ReLogic.dll
 │   └── monomod.core/1.3.2/lib/net8.0/MonoMod.Core.dll
 └── LaunchUtils/
-    ├── dotnet-runtime-8.0.0-win-x64.zip   # original archive may stay here
-    ├── dotnet.exe                          # extracted; Playden launches this
+    ├── dotnet-runtime-8.0.0-win-x64.zip
+    ├── dotnet.exe
     ├── host/fxr/8.0.0/hostfxr.dll
     └── shared/Microsoft.NETCore.App/8.0.0/
         ├── coreclr.dll
         └── clrjit.dll
 ~~~
 
-**If your installation doesn't include the ZIP**, you can obtain the legitimate Windows x64 .NET Runtime 8.0.0 archive from [Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) and extract the contents into `LaunchUtils`. But **the tested setup already had this ZIP in place**.
+If `dotnet.exe` is not directly inside `LaunchUtils` after extraction, move the **contents** of the extracted folder there. The original ZIP can remain in place.
 
-**Important:** The MonoMod patch hard-codes the above `clrjit.dll` path. A different runtime version, folder name or game location requires reviewing the patch before use.
+**Important:** The MonoMod patch in Step 3 uses the exact `clrjit.dll` path shown above, so keep the runtime directory named `8.0.0` and the game at the documented location.
 
 ## Step 3 — Fix MonoMod.Core (Access denied)
 

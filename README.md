@@ -38,11 +38,13 @@ Install/import tModLoader (Steam app ID **1281930**) in Playden. The folder shou
 
 You should have `tModLoader.dll`, `Libraries/`, and the rest of the installed game files.
 
-The original test installation also included a copy of Terraria inside:
+The tested setup also included a copy of Terraria inside:
 
 ~~~text
 /data/playden-games/1281930/Terraria/
 ~~~
+
+That **inner copy came from an original Terraria installation downloaded through Playden**, which was next to the `1281930` folder and renamed to `/data/playden-games/Terraria/` first. See **Step 4** for the correct rename-then-copy order.
 
 **Do not rearrange the Libraries directory.** In particular, this file needs to be accessible:
 
@@ -110,51 +112,53 @@ The file should remain **431,104 bytes**. Do not substitute the earlier v1 exper
 
 Two early failures were linked to Steam verification:
 
-- tModLoader attempted to open `https://terraria.org` using `explorer.exe`, which Playden cannot launch as an additional Windows process.
+- tModLoader attempted to open `https://terraria.org` using `explorer.exe`, which Playden couldn't launch as an additional Windows process.
 - Another launch displayed: **Please ensure Steam is logged in and running.**
 
-The reported working setup used a second copy of the legitimate Terraria folder **next to** the tModLoader game folder:
+**Correction about the tested setup:** Terraria was **originally downloaded as its own game through Playden** and installed **next to** the tModLoader `1281930` directory. That original Terraria directory was **renamed to `Terraria`**, then **copied into** tModLoader's folder. We did **not** start with Terraria inside tModLoader and copy it outward.
+
+### Actual working order
+
+1. **Download/install your legitimate Windows Terraria game through Playden**, separately from tModLoader.
+2. In your PS5 file manager, open `/data/playden-games/`.
+3. Find the Terraria directory Playden created. It might be called `105600` (Terraria's Steam app ID).
+4. **Rename this original Playden Terraria directory to `Terraria`.** It should now be here:
+
+   ~~~text
+   /data/playden-games/Terraria/
+   ~~~
+
+   Check that `Terraria.exe` and `Content/` are directly inside this directory.
+5. **Copy that renamed Terraria folder** into tModLoader's `1281930` directory. You now have:
+
+   ~~~text
+   /data/playden-games/1281930/Terraria/
+   ~~~
+
+   Copy, don't move: the **original** stays alongside the `1281930` folder, and a **second copy** lives inside it.
+6. **In the original sibling directory only**, `/data/playden-games/Terraria/`, rename `steam_api.dll` to `steam_api.dll.bak` if that DLL is present. This was part of the tested setup; leave the copied Terraria directory and tModLoader's `Libraries/` DLLs alone.
+7. In Playden's tModLoader settings, set **Steam features → Game's own files**.
+
+Expected final layout:
 
 ~~~text
 /data/playden-games/
-├── Terraria/
+├── Terraria/                          # ORIGINAL Playden Terraria install (renamed)
 │   ├── Terraria.exe
 │   ├── Content/
-│   └── steam_api.dll.bak
-└── 1281930/
+│   └── steam_api.dll.bak              # renamed here if present
+└── 1281930/                          # tModLoader (do not rename)
     ├── tModLoader.dll
-    ├── Terraria/
+    ├── Terraria/                      # COPY from original sibling directory
+    │   ├── Terraria.exe
+    │   └── Content/
     ├── LaunchUtils/
     └── Libraries/
 ~~~
 
-You can get the Terraria files in **either** of these ways:
+**Optional:** Renaming a Playden-managed game directory may break its original Playden launcher entry. To keep that standalone entry working, **copy** the newly downloaded Terraria directory to `/data/playden-games/Terraria/` instead of renaming the managed directory, then copy that directory into `1281930/`. The **tested method** was rename-then-copy.
 
-**Option A — Download Terraria directly through Playden (easiest if you already use Playden):**
-
-1. Download/install your legitimate **Windows Terraria** game through Playden.
-2. In your PS5 file manager, open `/data/playden-games/`.
-3. Find the folder that Playden created for Terraria. It may be named by Terraria's Steam app ID (`105600`) rather than `Terraria`.
-4. **Rename that Terraria installation folder to `Terraria`**, so tModLoader can see it at:
-
-   ~~~text
-   /data/playden-games/Terraria/Terraria.exe
-   /data/playden-games/Terraria/Content/
-   ~~~
-
-   Only rename the **Terraria** directory; leave the `1281930` **tModLoader** directory alone. If you also want Terraria's original Playden entry to keep working independently, **copy** its folder to `Terraria` instead of moving/renaming the managed folder, since renaming may break the original entry.
-
-**Option B — Copy Terraria from an existing installation:**
-
-1. Copy the entire legitimate Terraria directory from `/data/playden-games/1281930/Terraria/` into `/data/playden-games/Terraria/`.
-2. Check that `Terraria.exe` and the `Content/` folder are directly inside `/data/playden-games/Terraria/`, without an extra nested `Terraria/Terraria/` level.
-
-**After either option:**
-
-1. **Only inside `/data/playden-games/Terraria/`**, rename `steam_api.dll` to `steam_api.dll.bak` if it exists, as in the tested setup.
-2. In Playden, select **Steam features → Game's own files** for tModLoader.
-
-Do not modify Steam DLLs in the tModLoader `Libraries/` folder. This behavior may vary with Terraria and Playden versions.
+Do not modify Steam DLLs inside tModLoader's `Libraries/` folder. The behavior can vary across Terraria and Playden versions.
 
 ## Step 5 — Configure Playden
 

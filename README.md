@@ -226,13 +226,11 @@ A possible PS5 Wine-prefix location is:
 /data/playden/games/steam-1281930/library/prefixes/game/drive_c/users/prospero/Documents/My Games/Terraria/tModLoader/Mods/
 ~~~
 
-A file manager may show **Permission denied** while navigating Playden's prefix. The `TMLData` approach avoids needing to browse it. If mods don't appear, inspect `tModLoader-Logs/client.log` for the line:
+Playden can block file-manager access to its Wine prefix. In this setup, opening `tModLoader-Logs/client.log` also produced **Permission denied**, so **you do not need to access that log to install mods**.
 
-~~~text
-Saves Are Located At:
-~~~
+To keep everything accessible, use the `-tmlsavedirectory Z:\data\playden-games\1281930\TMLData` argument from **Step 5**, create `/data/playden-games/1281930/TMLData/Mods/`, and place `.tmod` files directly there. If mods do not show in-game, first check the extra argument, the exact folder name, and the `.tmod` extensions.
 
-This confirms exactly which save directory tModLoader is using. Changing the save-directory argument doesn't automatically migrate existing saves and characters.
+If `client.log` is accessible on another installation, its `Saves Are Located At:` line may help confirm the active save location; it is **optional**, not a required setup step. Changing the save-directory argument does not automatically migrate existing saves or characters.
 
 ## Troubleshooting
 
@@ -245,8 +243,8 @@ This confirms exactly which save directory tModLoader is using. Changing the sav
 | `No matching GL pixel format available` | Select DXVK and use `/gldevice:D3D11`. |
 | `Please ensure Steam is logged in and running` | Check adjacent Terraria copy and **Game's own files**. |
 | Mods not visible | Check `-tmlsavedirectory` and `TMLData/Mods/`. |
-| Protected prefix / Permission denied | Use an accessible `TMLData` folder. |
-| Unexplained crash | Check `/data/playden/logs/` and `tModLoader-Logs/client.log`. |
+| Permission denied opening the Wine prefix or `tModLoader-Logs/client.log` | This occurred in the tested setup. Use the accessible `TMLData/Mods/` directory for mods; don't rely on the protected client log. |
+| Unexplained crash | Check Playden's session logs under `/data/playden/logs/` **if accessible**. The tModLoader `client.log` may be blocked by file permissions; avoid changing permissions blindly. |
 
 ## Notes and limitations
 

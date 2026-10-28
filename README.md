@@ -128,13 +128,33 @@ The reported working setup used a second copy of the legitimate Terraria folder 
     └── Libraries/
 ~~~
 
-Follow these steps:
+You can get the Terraria files in **either** of these ways:
 
-1. Copy the entire legitimate Terraria directory from `/data/playden-games/1281930/Terraria/` to `/data/playden-games/Terraria/`.
-2. **In that extra copy only**, rename `steam_api.dll` to `steam_api.dll.bak` if it exists.
-3. In Playden, choose **Steam features → Game's own files** for tModLoader.
+**Option A — Download Terraria directly through Playden (easiest if you already use Playden):**
 
-Do not touch the original game files or DLLs in the tModLoader `Libraries/` folder. This step's behavior can vary with Terraria versions.
+1. Download/install your legitimate **Windows Terraria** game through Playden.
+2. In your PS5 file manager, open `/data/playden-games/`.
+3. Find the folder that Playden created for Terraria. It may be named by Terraria's Steam app ID (`105600`) rather than `Terraria`.
+4. **Rename that Terraria installation folder to `Terraria`**, so tModLoader can see it at:
+
+   ~~~text
+   /data/playden-games/Terraria/Terraria.exe
+   /data/playden-games/Terraria/Content/
+   ~~~
+
+   Only rename the **Terraria** directory; leave the `1281930` **tModLoader** directory alone. If you also want Terraria's original Playden entry to keep working independently, **copy** its folder to `Terraria` instead of moving/renaming the managed folder, since renaming may break the original entry.
+
+**Option B — Copy Terraria from an existing installation:**
+
+1. Copy the entire legitimate Terraria directory from `/data/playden-games/1281930/Terraria/` into `/data/playden-games/Terraria/`.
+2. Check that `Terraria.exe` and the `Content/` folder are directly inside `/data/playden-games/Terraria/`, without an extra nested `Terraria/Terraria/` level.
+
+**After either option:**
+
+1. **Only inside `/data/playden-games/Terraria/`**, rename `steam_api.dll` to `steam_api.dll.bak` if it exists, as in the tested setup.
+2. In Playden, select **Steam features → Game's own files** for tModLoader.
+
+Do not modify Steam DLLs in the tModLoader `Libraries/` folder. This behavior may vary with Terraria and Playden versions.
 
 ## Step 5 — Configure Playden
 

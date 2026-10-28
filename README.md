@@ -194,43 +194,50 @@ Why these settings?
 - `Program folder = .` runs the game from the tModLoader root. Pointing it at `LaunchUtils` can prevent the game from finding `ReLogic.dll`.
 - `-tmlsavedirectory` moves mod and save data to a directory accessible to PS5 file managers, avoiding protected Wine-prefix folders.
 
-## Step 6 — Install mods
+## Step 6 — Set up the mod folder and install mods
 
-With the recommended `-tmlsavedirectory` argument, copy `.tmod` files here:
-
-~~~text
-/data/playden-games/1281930/TMLData/Mods/
-~~~
-
-Create the `TMLData/Mods` folders if needed. Place files directly in `Mods`, for example:
+The `-tmlsavedirectory` launch argument from **Step 5** tells tModLoader to use this location for its saves, settings and mods:
 
 ~~~text
-TMLData/Mods/ExampleMod.tmod
+/data/playden-games/1281930/TMLData/
 ~~~
 
-Do not leave them inside a ZIP or put them in `Libraries/`.
+1. Launch tModLoader once with the `-tmlsavedirectory` argument enabled. It should automatically create a `TMLData` directory.
+2. Close tModLoader completely, then open `/data/playden-games/1281930/` with your PS5 file manager.
+3. Try opening `TMLData`. In the tested Playden setup, the automatically created directory returned **Permission denied**.
+4. **If `TMLData` is inaccessible on a fresh installation with no worlds, characters or settings you need to keep**, delete **only that automatically created `TMLData` directory** after closing the game. Then use the file manager to **create a new folder with the exact same name, `TMLData`**, in `/data/playden-games/1281930/`.
+5. Open your manually created `TMLData` folder and create a subfolder called `Mods`.
+6. Copy your `.tmod` files directly into `Mods`:
 
-Start tModLoader, go to **Workshop → Manage Mods**, enable the mods, and reload when prompted. Mods may require dependencies or a particular tModLoader version; their successful execution has not been verified by this guide.
+   ~~~text
+   /data/playden-games/1281930/TMLData/Mods/ExampleMod.tmod
+   ~~~
 
-### Default save path / Permission denied
+7. Start tModLoader, open **Workshop → Manage Mods**, enable your mods and reload when prompted.
 
-Without the override, the game reported:
+**Important:** `TMLData` can contain worlds, characters, settings and other save data. **Do not delete an existing populated save directory.** Back up anything you need before replacing it. Recreating the folder worked in the tested setup because the inaccessible directory was newly generated. The same permissions behavior is not guaranteed on every Playden installation.
+
+Put the actual `.tmod` files in `Mods`, not ZIP archives, extra nested directories or `Libraries/`. Individual mods may need dependencies or a compatible tModLoader version.
+
+### Save folder and log access
+
+Without the `-tmlsavedirectory` override, the game reported this Windows save location:
 
 ~~~text
 C:\users\prospero\Documents\My Games\Terraria\tModLoader
 ~~~
 
-A possible PS5 Wine-prefix location is:
+Its corresponding Playden Wine-prefix path may be:
 
 ~~~text
 /data/playden/games/steam-1281930/library/prefixes/game/drive_c/users/prospero/Documents/My Games/Terraria/tModLoader/Mods/
 ~~~
 
-Playden can block file-manager access to its Wine prefix. In this setup, opening `tModLoader-Logs/client.log` also produced **Permission denied**, so **you do not need to access that log to install mods**.
+The PS5 file manager can return **Permission denied** for Playden-managed folders. In the tested setup, opening `tModLoader-Logs/client.log` also returned **Permission denied**. That log is **not needed** to install mods.
 
-To keep everything accessible, use the `-tmlsavedirectory Z:\data\playden-games\1281930\TMLData` argument from **Step 5**, create `/data/playden-games/1281930/TMLData/Mods/`, and place `.tmod` files directly there. If mods do not show in-game, first check the extra argument, the exact folder name, and the `.tmod` extensions.
+If the mods do not appear, check the `-tmlsavedirectory` argument in **Step 5**, make sure the manually created folder is exactly `TMLData/Mods/`, and confirm your files end with `.tmod`. On installations where `client.log` is readable, its `Saves Are Located At:` line can help confirm the active path, but it is optional.
 
-If `client.log` is accessible on another installation, its `Saves Are Located At:` line may help confirm the active save location; it is **optional**, not a required setup step. Changing the save-directory argument does not automatically migrate existing saves or characters.
+Changing the save-directory argument does not automatically move existing characters, worlds or settings.
 
 ## Troubleshooting
 
@@ -243,7 +250,8 @@ If `client.log` is accessible on another installation, its `Saves Are Located At
 | `No matching GL pixel format available` | Select DXVK and use `/gldevice:D3D11`. |
 | `Please ensure Steam is logged in and running` | Check adjacent Terraria copy and **Game's own files**. |
 | Mods not visible | Check `-tmlsavedirectory` and `TMLData/Mods/`. |
-| Permission denied opening the Wine prefix or `tModLoader-Logs/client.log` | This occurred in the tested setup. Use the accessible `TMLData/Mods/` directory for mods; don't rely on the protected client log. |
+| Permission denied opening auto-created `TMLData` | Close tModLoader. On a **new, empty setup only**, remove that generated directory, recreate `TMLData` manually in the same location, then make `Mods/` inside it. Back up existing saves before removing anything. |
+| Permission denied opening the Wine prefix or `tModLoader-Logs/client.log` | File-manager access may be restricted. Use the manually created `TMLData/Mods/` folder and don't rely on the protected client log. |
 | Unexplained crash | Check Playden's session logs under `/data/playden/logs/` **if accessible**. The tModLoader `client.log` may be blocked by file permissions; avoid changing permissions blindly. |
 
 ## Notes and limitations

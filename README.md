@@ -28,29 +28,23 @@ Versions matter. The included patcher supports **only the exact MonoMod.Core fil
 - The `dotnet-runtime-8.0.0-win-x64.zip` archive in tModLoader's `LaunchUtils/` directory (see Step 2).
 - Python 3 on a PC or Mac to generate the patched MonoMod DLL.
 
-## Step 1 — Copy your tModLoader files
+## Step 1 — Install tModLoader through Playden
 
-Install/import tModLoader (Steam app ID **1281930**) in Playden. The folder should be:
+Install/import tModLoader (Steam app ID **1281930**) into Playden. Its game directory should be:
 
 ~~~text
 /data/playden-games/1281930/
 ~~~
 
-You should have `tModLoader.dll`, `Libraries/`, and the rest of the installed game files.
+Confirm that the folder contains `tModLoader.dll`, `Libraries/`, `LaunchUtils/`, and the other tModLoader files.
 
-The tested setup also included a copy of Terraria inside:
-
-~~~text
-/data/playden-games/1281930/Terraria/
-~~~
-
-That **inner copy came from an original Terraria installation downloaded through Playden**, which was next to the `1281930` folder and renamed to `/data/playden-games/Terraria/` first. See **Step 4** for the correct rename-then-copy order.
-
-**Do not rearrange the Libraries directory.** In particular, this file needs to be accessible:
+Keep the `Libraries/` folder structure intact. The ReLogic assembly, for example, should be accessible here:
 
 ~~~text
 /data/playden-games/1281930/Libraries/ReLogic/1.0.0/ReLogic.dll
 ~~~
+
+You'll install Terraria separately through Playden in **Step 4**, then copy its folder into tModLoader's `1281930` directory.
 
 ## Step 2 — Extract the .NET 8 runtime
 
@@ -120,59 +114,56 @@ Original: 32d22e9aa161059518ddb5bd4c1403630a0a9cd882ed44ec2512e6576c8d33e8
 Patched:  a8ae931bb7bec075fb9a1405ed8d903eb2a7d7289f3d7c9cca538e91c0b38677
 ~~~
 
-The file should remain **431,104 bytes**. Do not substitute the earlier v1 experimental DLL, which caused an assembly-loading error. For implementation details, see [PATCH_DETAILS.md](PATCH_DETAILS.md).
+The patched file should remain **431,104 bytes**. The patcher verifies the exact supported original and resulting DLL before saving the output. For implementation details, see [PATCH_DETAILS.md](PATCH_DETAILS.md).
 
-## Step 4 — Set up standalone Terraria
+## Step 4 — Install Terraria and make it discoverable
 
-Two early failures were linked to Steam verification:
+Install your legitimate Windows copy of **Terraria** as a separate game in Playden. tModLoader needs the Terraria game files in a folder named `Terraria` both **alongside** and **inside** its own game directory.
 
-- tModLoader attempted to open `https://terraria.org` using `explorer.exe`, which Playden couldn't launch as an additional Windows process.
-- Another launch displayed: **Please ensure Steam is logged in and running.**
+1. **Download/install Terraria through Playden**, separately from tModLoader.
+2. Open the PS5 file manager and navigate to:
 
-**Correction about the tested setup:** Terraria was **originally downloaded as its own game through Playden** and installed **next to** the tModLoader `1281930` directory. That original Terraria directory was **renamed to `Terraria`**, then **copied into** tModLoader's folder. We did **not** start with Terraria inside tModLoader and copy it outward.
+   ~~~text
+   /data/playden-games/
+   ~~~
 
-### Actual working order
-
-1. **Download/install your legitimate Windows Terraria game through Playden**, separately from tModLoader.
-2. In your PS5 file manager, open `/data/playden-games/`.
-3. Find the Terraria directory Playden created. It might be called `105600` (Terraria's Steam app ID).
-4. **Rename this original Playden Terraria directory to `Terraria`.** It should now be here:
+3. Find the Terraria installation folder. Playden may name it using Terraria's Steam app ID, `105600`.
+4. **Rename the Terraria folder to `Terraria`**, so it is located at:
 
    ~~~text
    /data/playden-games/Terraria/
    ~~~
 
-   Check that `Terraria.exe` and `Content/` are directly inside this directory.
-5. **Copy that renamed Terraria folder** into tModLoader's `1281930` directory. You now have:
+   Make sure `Terraria.exe` and the `Content/` folder are directly inside `Terraria/`.
+5. **Copy the entire `Terraria` folder into tModLoader's `1281930` directory.** Keep the original folder in place alongside `1281930`:
 
    ~~~text
    /data/playden-games/1281930/Terraria/
    ~~~
 
-   Copy, don't move: the **original** stays alongside the `1281930` folder, and a **second copy** lives inside it.
-6. **In the original sibling directory only**, `/data/playden-games/Terraria/`, rename `steam_api.dll` to `steam_api.dll.bak` if that DLL is present. This was part of the tested setup; leave the copied Terraria directory and tModLoader's `Libraries/` DLLs alone.
-7. In Playden's tModLoader settings, set **Steam features → Game's own files**.
+6. In the **original sibling folder** at `/data/playden-games/Terraria/`, rename `steam_api.dll` to `steam_api.dll.bak` if it exists. Leave the `steam_api.dll` in the copy inside tModLoader untouched, and don't alter any DLLs in tModLoader's `Libraries/` folder.
+7. In Playden's tModLoader game settings, choose **Steam features → Game's own files**.
 
-Expected final layout:
+Your completed file structure should look like this:
 
 ~~~text
 /data/playden-games/
-├── Terraria/                          # ORIGINAL Playden Terraria install (renamed)
+├── Terraria/                         # Terraria installation downloaded via Playden
 │   ├── Terraria.exe
 │   ├── Content/
-│   └── steam_api.dll.bak              # renamed here if present
-└── 1281930/                          # tModLoader (do not rename)
+│   └── steam_api.dll.bak             # renamed in this folder only, if present
+└── 1281930/                         # tModLoader installation
     ├── tModLoader.dll
-    ├── Terraria/                      # COPY from original sibling directory
+    ├── Terraria/                     # copy of the Terraria installation
     │   ├── Terraria.exe
     │   └── Content/
     ├── LaunchUtils/
     └── Libraries/
 ~~~
 
-**Optional:** Renaming a Playden-managed game directory may break its original Playden launcher entry. To keep that standalone entry working, **copy** the newly downloaded Terraria directory to `/data/playden-games/Terraria/` instead of renaming the managed directory, then copy that directory into `1281930/`. The **tested method** was rename-then-copy.
+**If you want Terraria's own Playden launcher entry to keep working:** Instead of renaming its managed installation folder, **copy** that folder to `/data/playden-games/Terraria/` and then copy `Terraria/` into `1281930/`. Renaming a Playden-managed folder can disrupt its launcher entry.
 
-Do not modify Steam DLLs inside tModLoader's `Libraries/` folder. The behavior can vary across Terraria and Playden versions.
+This layout lets tModLoader find the standalone Terraria files and addresses Steam-related startup errors such as **“Please ensure Steam is logged in and running.”** Behavior can vary across Terraria and Playden versions.
 
 ## Step 5 — Configure Playden
 
@@ -199,8 +190,8 @@ tModLoader.dll /gldevice:D3D11 -tmlsavedirectory Z:\data\playden-games\1281930\T
 
 Why these settings?
 
-- `/gldevice:D3D11` selects Direct3D 11, letting DXVK translate rendering to Vulkan. This bypassed the earlier **SDL: No matching GL pixel format available** error.
-- `Program folder = .` runs the game from the tModLoader root. Pointing it at `LaunchUtils` previously broke `ReLogic.dll` resolution.
+- `/gldevice:D3D11` selects Direct3D 11, letting DXVK translate rendering to Vulkan. This avoids the **SDL: No matching GL pixel format available** error encountered with the OpenGL backend.
+- `Program folder = .` runs the game from the tModLoader root. Pointing it at `LaunchUtils` can prevent the game from finding `ReLogic.dll`.
 - `-tmlsavedirectory` moves mod and save data to a directory accessible to PS5 file managers, avoiding protected Wine-prefix folders.
 
 ## Step 6 — Install mods
